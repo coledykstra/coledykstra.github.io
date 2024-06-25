@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Commit Message Builder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, textarea {
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+            box-sizing: border-box;
+        }
+        textarea {
+            width: 100%;
+        }		
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h1>GitHub Commit Message Builder</h1>
+<a href="https://www.conventionalcommits.org/">conventionalcommits.org</a><br><br>
+
+<label for="commitType">Type:</label>
+<select id="commitType"></select>
+
+<label for="commitScope">Scope (Optional):</label>
+<input type="text" id="commitScope" placeholder="Enter scope">
+
+<label for="breakingChange">Breaking Change:</label>
+<input type="checkbox" id="breakingChange">
+
+<label for="commitVerb">Subject Verb:</label>
+<select id="commitVerb"></select>
+
+<label for="commitDescription">Subject Text:</label>
+<input type="text" id="commitDescription" placeholder="Enter subject text" required>
+
+<label for="commitBody">Body (Optional):</label>
+<textarea id="commitBody" placeholder="Enter body text"></textarea>
+
+<label for="commitFooter">Footer (Optional):</label>
+<textarea id="commitFooter" placeholder="Enter footer text"></textarea>
+
+<button onclick="generateCommitMessage()">Generate and Copy to Clipboard</button>
+
+<hr>
+
+<h3>Type:</h3>
+<li>API relevant changes
+<ul dir="auto">
+<li><code>feat</code> Commits, that adds or remove a new feature</li>
+<li><code>fix</code> Commits, that fixes a bug</li>
+</ul>
+</li>
+<li><code>refactor</code> Commits, that rewrite/restructure your code, however does not change any API behaviour
+<ul dir="auto">
+<li><code>perf</code> Commits are special <code>refactor</code> commits, that improve performance</li>
+</ul>
+</li>
+<li><code>build</code> Commits, that affect build components like build tool, ci pipeline, dependencies, project version, ...</li>
+<li><code>chore</code> Miscellaneous commits e.g. modifying <code>.gitignore</code></li>
+<li><code>docs</code> Commits, that affect documentation only</li>
+<li><code>ops</code> Commits, that affect operational components like infrastructure, deployment, backup, recovery, ...</li>
+<li><code>style</code> Commits, that do not affect the meaning (white-space, formatting, missing semi-colons, etc)</li>
+<li><code>test</code> Commits, that add missing tests or correcting existing tests</li>
+<p>The <code>scope</code> provides additional contextual information.</p>
+<p>The <code>subject</code> contains a concise description of the change.</p>
+<p>The optional <code>body</code> should include the motivation for the change and contrast this with previous behavior.</p>
+<p>The optional <code>footer</code> should contain any information about Breaking Changes and is also the place to reference Issues that this commit refers to.</p>
+<a href="https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13">Source</a><br><br>
+<script>
+    // Set values for commit type and verb dynamically
+    const commitTypeOptions = ['build', 'chore', 'docs', 'feat', 'fix', 'ops', 'perf', 'refactor', 'style', 'test'];
+    const commitVerbOptions = ['add', 'bump', 'decrease', 'fix', 'handle', 'implement', 'increase', 'remove', 'update'];
+
+    const commitTypeSelect = document.getElementById('commitType');
+    const commitVerbSelect = document.getElementById('commitVerb');
+
+    commitTypeOptions.forEach(type => {
+        const option = document.createElement('option');
+        option.value = type;
+        option.textContent = type;
+        commitTypeSelect.appendChild(option);
+    });
+
+    commitVerbOptions.forEach(verb => {
+        const option = document.createElement('option');
+        option.value = verb;
+        option.textContent = verb;
+        commitVerbSelect.appendChild(option);
+    });
+
+    function generateCommitMessage() {
+        const type = commitTypeSelect.value;
+        const scope = document.getElementById('commitScope').value;
+        const isBreakingChange = document.getElementById('breakingChange').checked;
+        const breakingChange = isBreakingChange ? '!' : '';
+        const verb = commitVerbSelect.value;
+        let description = document.getElementById('commitDescription').value.trim();
+        let body = document.getElementById('commitBody').value;
+        let footer = document.getElementById('commitFooter').value;
+
+        // Ensure a description is provided
+        if (!description) {
+            alert('Please enter a description for the commit.');
+            return;
+        }
+
+        // Remove trailing whitespace and periods from description
+        description = description.replace(/[.\s]+$/, '');
+
+        // Ensure no line exceeds 100 characters
+        const lines = [type, scope, breakingChange, verb, description, body, footer];
+        const exceededLine = lines.find(line => line.length > 100);
+
+        if (exceededLine) {
+            alert('One or more lines exceed 100 characters. Please revise your input.');
+            return;
+        }
+
+        // Prefix footer with "BREAKING CHANGE:" if Breaking Change is checked
+        if (isBreakingChange && footer) {
+            footer = `BREAKING CHANGE: ${footer}`;
+        }
+
+        const commitMessage = `${type}${scope ? `(${scope})` : ''}${breakingChange}: ${verb} ${description}${body ? `\n\n${body}` : ''}${footer ? `\n\n${footer}` : ''}`;
+
+        // Copy to clipboard
+        const tempInput = document.createElement('textarea');
+        document.body.appendChild(tempInput);
+        tempInput.value = commitMessage;
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+
+        alert('Commit message copied to clipboard:\n' + commitMessage);
+    }
+</script>
+
+</body>
+</html>
