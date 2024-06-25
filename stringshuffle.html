@@ -7,26 +7,84 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            flex: 1;
         }
         textarea {
-            width: 100%;
-            height: 200px;
-            margin-bottom: 10px;
+            width: 50%;
+            height: 100%;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: 1px solid #555555;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            font-size: 16px;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #888888;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #1e1e1e;
         }
         button {
+            background-color: #555555;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #888888;
+        }
+        .font-size-control {
+            display: flex;
+            align-items: center;
+        }
+        .font-size-control label {
             margin-right: 10px;
+        }
+        .font-size-control input {
+            width: 50px;
+            padding: 5px;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            border: 1px solid #555555;
         }
     </style>
 </head>
 <body>
 
-    <h1>Shuffle Text Lines</h1>
-    <textarea id="inputText" placeholder="Enter text here..."></textarea>
-    <textarea id="outputText" placeholder="Shuffled text will appear here..." readonly></textarea>
-    <br>
-    <button onclick="shuffleLines()">Shuffle Lines</button>
-    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    <div class="container">
+        <textarea id="inputText" placeholder="Enter text here..."></textarea>
+        <textarea id="outputText" placeholder="Shuffled text will appear here..." readonly></textarea>
+    </div>
+    <div class="controls">
+        <div>
+            <button onclick="shuffleLines()">Shuffle Lines</button>
+            <button onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+        <div class="font-size-control">
+            <label for="fontSize">Font Size:</label>
+            <input type="number" id="fontSize" value="16" min="8" max="48" onchange="changeFontSize()">
+        </div>
+    </div>
 
     <script>
         function shuffleLines() {
@@ -46,6 +104,12 @@
             const outputText = document.getElementById('outputText');
             outputText.select();
             document.execCommand('copy');
+        }
+
+        function changeFontSize() {
+            const fontSize = document.getElementById('fontSize').value;
+            document.getElementById('inputText').style.fontSize = fontSize + 'px';
+            document.getElementById('outputText').style.fontSize = fontSize + 'px';
         }
     </script>
 </body>
