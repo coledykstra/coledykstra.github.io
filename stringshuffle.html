@@ -92,6 +92,7 @@
         <div class="numbering-control">
             <label for="numbering">Number Lines:</label>
             <input type="checkbox" id="numbering">
+            <button onclick="sampleText()">Sample Input</button>
         </div>
     </div>
 
@@ -121,6 +122,41 @@
             const fontSize = document.getElementById('fontSize').value;
             document.getElementById('inputText').style.fontSize = fontSize + 'px';
             document.getElementById('outputText').style.fontSize = fontSize + 'px';
+        }
+
+        function sampleText() {
+            const animals = [
+                "Albatross",
+                "Bear",
+                "Cat",
+                "Cheetah",
+                "Cow",
+                "Crocodile",
+                "Crow",
+                "Dog",
+                "Donkey",
+                "Elephant",
+                "Fish",
+                "Hare",
+                "Hen",
+                "Horse",
+                "Leopard",
+                "Lion",
+                "Panther",
+                "Pigeon",
+                "Polar bear",
+                "Porcupine",
+                "Rabbit",
+                "Tiger",
+                "Tortoise",
+                "Turtle"
+            ];
+            const inputElement = document.getElementById('inputText');
+            if (inputElement.value === '') {
+                inputElement.value = animals.join('\n');
+            } else {
+                alert('Input is not empty!');
+            }
         }
     </script>
 </body>
